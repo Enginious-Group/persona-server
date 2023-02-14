@@ -110,6 +110,7 @@ if __name__ == "__main__":
         required=False,
         help='storage path'
     )
+    args = parser.parse_args()
     if args.wd:
         BASE_DIR = Path(args.wd)
 
