@@ -111,8 +111,8 @@ if __name__ == "__main__":
         help='storage path'
     )
     args = parser.parse_args()
-    if args.wd:
-        BASE_DIR = Path(args.wd)
+    if args.s:
+        BASE_DIR = Path(args.s)
 
     uvicorn.run(app, debug=True, port=9092, host="0.0.0.0")
     
