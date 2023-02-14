@@ -11,7 +11,7 @@ from starlette.responses import RedirectResponse, FileResponse, HTMLResponse
 from PIL import Image
 
 from api import *
-from my_image_processing import MyModel  # TODO edit change to your model
+from my_image_processing import MyModel 
 
 
 BASE_DIR = Path('D:\Persona\Maya\Input')
@@ -98,14 +98,12 @@ async def obj_forward_process(file: UploadFile = File(...)):
                 response_zip.write(os.path.join(current_working_dir, 'hair_color', person_name_json), "haircolor.json")
         return FileResponse("response.zip", media_type="zip")
     except Exception as e:
-        # TODO edit possibly adjust error message
         message = "Something went wrong during image processing"
         if app.debug:
             message += f"\n{e}"
         return HTMLResponse(message, status_code=500)
 
 if __name__ == "__main__":
-    # TODO edit turn off debug, change port if using python api.py to run
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-s',

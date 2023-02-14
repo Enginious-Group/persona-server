@@ -27,8 +27,7 @@ from zipfile import ZipFile
 import shutil
 
 
-# EPHEM_URL = "104.198.4.217"
-# EPHEM_URL = "34.83.110.169"
+
 EPHEM_URL = "34.168.92.129"
 
 PORTS = {
@@ -159,13 +158,6 @@ def process_file(input_filepath:Path, output_dirpath:Path):
         _ = call_ml_api(d3df_results["texture"], output_dirpath, "correction_color", "json")
 
         logging.info("Done!")
-        # mlobjpath = Path('D:\Persona\Maya\Input\ML_Head\deca3dface\ML_Head.obj')
-        # mljpgpath = Path('D:\Persona\Maya\Input\ML_Head\deca3dface\ML_Head.png')
-        # mlobjnew = Path('D:\Persona\Maya\Input\ML_Head.obj')
-        # print('copycopy')
-        # mljpgnew = Path('D:\Persona\Maya\Input\genericHead_texture_v001.png')
-        # shutil.copyfile(mlobjpath, mlobjnew)
-        # shutil.copyfile(mljpgpath, mljpgnew)
 
     except requests.exceptions.RequestException as e:
         logging.error(f"Request failed because {e}")
