@@ -82,8 +82,8 @@ async def obj_forward_process(file: UploadFile = File(...)):
         person_name_json = person_name + '.json'
        
         with ZipFile('response.zip', 'w') as response_zip:
-            if os.path.exists(os.path.join(current_working_dir, 'deca3dface', person_name_png)):
-                response_zip.write(os.path.join(current_working_dir, 'deca3dface', person_name_png), 't_' + person_name + '.png')
+            if os.path.exists(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png)):
+                response_zip.write(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png), 't_' + person_name + '.png')
             if os.path.exists(os.path.join(current_working_dir, 'deca3dface', person_name_obj)):
                 response_zip.write(os.path.join(current_working_dir, 'deca3dface', person_name_obj), person_name + '.obj')
             if os.path.exists(os.path.join(current_working_dir, 'correction_color_deca', person_name_json)):
