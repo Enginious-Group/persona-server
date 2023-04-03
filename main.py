@@ -14,7 +14,31 @@ from api import *
 from my_image_processing import MyModel 
 
 
+### LOGS
+from functools import wraps
+from pathlib import Path
+from datetime import datetime
+###
+
+def log_execution_time(app, logger):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            start_time = datetime.now()
+            response = await func(*args, **kwargs)
+            end_time = datetime.now()
+            api_name = 'Persona request'
+            log_time_msg = f"{api_name} took {end_time - start_time} from {start_time} to {end_time}"
+            logger.info(log_time_msg)
+            return response
+        return wrapper
+    return decorator
+
+
+
+###
 BASE_DIR = Path('D:\Persona\Maya\Input')
+
 
 class Message(BaseModel):
     message: str
@@ -28,9 +52,8 @@ def read_imagefile(file) -> Image.Image:
 state = {}
 
 app_desc = " Persona API "
-
 app = FastAPI(title='Persona API', description=app_desc, debug=True)
-
+uvicorn_logger = logging.getLogger("uvicorn.error")
 
 @app.on_event("startup")
 async def load_model():
@@ -48,12 +71,13 @@ async def index():
     responses={
         200: {
             "content": {"zip": {}},
-            "description": "Returns processed image",
+            "description": "Returns zipped Persona output",
         },
         422: {"model": Message},
         500: {"model": Message},
     }
 )
+@log_execution_time(app, uvicorn_logger)
 async def obj_forward_process(file: UploadFile = File(...)):
 
 
@@ -101,12 +125,14 @@ async def obj_forward_process(file: UploadFile = File(...)):
                 response_zip.write(os.path.join(current_working_dir, 'hair_color', person_name_json), "haircolor.json")
         return FileResponse(response_path, media_type="zip")
     except Exception as e:
-        message = "Something went wrong during image processing"
+        message = "Something went wrong during persona pipeline"
+        uvicorn_logger.error(f"Exception: {e}")
         if app.debug:
             message += f"\n{e}"
         return HTMLResponse(message, status_code=500)
 
 if __name__ == "__main__":
+    
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-s',
@@ -117,6 +143,6 @@ if __name__ == "__main__":
     if args.s:
         BASE_DIR = Path(args.s)
 
-    uvicorn.run(app, debug=True, port=9092, host="0.0.0.0")
+    uvicorn.run(app, debug=True, port=9092, host="0.0.0.0", log_config="log.ini")
     
 
