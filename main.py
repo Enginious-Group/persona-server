@@ -80,7 +80,7 @@ async def obj_forward_process(file: UploadFile = File(...)):
         person_name_png = person_name + '.png'
         person_name_obj = person_name + '.obj'
         person_name_json = person_name + '.json'
-        response_path = current_working_dir + 'response.zip'
+        response_path = current_working_dir + '/response.zip'
        
         with ZipFile(response_path, 'w') as response_zip:
             if os.path.exists(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png)):
