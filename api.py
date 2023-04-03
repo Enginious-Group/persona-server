@@ -28,6 +28,9 @@ import shutil
 
 
 
+
+
+
 EPHEM_URL = "34.127.24.251"
 
 PORTS = {
@@ -152,10 +155,10 @@ def process_file(input_filepath:Path, output_dirpath:Path):
         _ = call_ml_api(deca_results["texture"], output_dirpath, "texture_correction_deca", "png")
         _ = call_ml_api(deca_results["texture"], output_dirpath, "correction_color_deca", "json")
 
-        d3df_zip = call_ml_api(face_gfp_e4e, output_dirpath, "detailed_3d_face", "zip")
-        d3df_results = unzip_d3df_file(d3df_zip)
-        _ = call_ml_api(d3df_results["texture"], output_dirpath, "texture_correction", "png")
-        _ = call_ml_api(d3df_results["texture"], output_dirpath, "correction_color", "json")
+        # d3df_zip = call_ml_api(face_gfp_e4e, output_dirpath, "detailed_3d_face", "zip")
+        # d3df_results = unzip_d3df_file(d3df_zip)
+        # _ = call_ml_api(d3df_results["texture"], output_dirpath, "texture_correction", "png")
+        # _ = call_ml_api(d3df_results["texture"], output_dirpath, "correction_color", "json")
 
         logging.info("Done!")
 
