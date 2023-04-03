@@ -28,7 +28,7 @@ import shutil
 
 
 
-EPHEM_URL = "34.168.92.129"
+EPHEM_URL = "34.127.24.251"
 
 PORTS = {
     "body_shape_classifier":   9094,
