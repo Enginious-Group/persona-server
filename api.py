@@ -48,6 +48,9 @@ PORTS = {
     "correction_color_deca":   9097,
     "hairstyle_classifier":    9084,
     "hair_color":              9083,
+    "fitter_3dmm":             9087,
+    "texture_fitter":          9088,
+    "gt_texture_extractor":    9098,
 }
 
 def flatten(t:list):
@@ -57,6 +60,47 @@ def flatten(t:list):
 class ApiError(Exception):
     pass
 
+
+def call_gt_api(photo_filepath:Path, obj_filepath:Path):
+    #TODO: Fix multiple args request
+    '''
+    Function making a request call to a given ML API
+        input_filepath: Path to a file to be sent to the API
+        output_dirpath: Path to the folder in which results should be stored (API-specific subfolder will be created)
+        api_name: should be recognised as key in PORTS
+        output_extension: extension of the resulting file, needs to be adjusted to the api_name (e.g., for now we are using 'json', 'png' and 'obj')
+
+        files = {'photo_file': (photo_filepath, open(photo_filepath, 'rb'), 'image/png'),
+         'obj_file': (obj_filepath, open(obj_filepath, 'rb'))}
+    ''' 
+    output_extension = "png"
+    api_name = "gt_texture_extractor"
+    # Create url to access api
+    url = f'http://{EPHEM_URL}:{PORTS[api_name]}/process/{api_name}'
+
+    # Open input file, and process with api 
+
+    files = {'photo_file': (open(photo_filepath, 'rb'), 'image/png'),
+        'obj_file': (open(obj_filepath, 'rb'))}
+    r = requests.post(url, files=files)
+
+    if r.status_code == 200:
+        logging.info(f"{api_name} returned results!")
+
+        # Create folder for output
+        output_dir = output_dirpath / input_filepath.stem / api_name
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save output to file
+        output_filepath = output_dir / (input_filepath.stem + "." + output_extension)
+        with open(output_filepath, 'wb') as output:
+            output.write(r.content)
+
+        # Return
+        return output_filepath
+
+    else:
+        raise ApiError(f"{api_name} failed! Status code: {r.status_code}")
 
 def call_ml_api(input_filepath:Path, output_dirpath:Path, api_name:str, output_extension:str):
     '''
@@ -148,12 +192,19 @@ def process_file(input_filepath:Path, output_dirpath:Path):
         _ = call_ml_api(face_gfp_e4e, output_dirpath, "ethnicity_predictor", "json")
         _ = call_ml_api(face_gfp_e4e, output_dirpath, "hairstyle_classifier", "json")
         _ = call_ml_api(face_gfp_e4e, output_dirpath, "hair_color", "json")
+        #_ = call_ml_api(face_gfp_e4e, output_dirpath, "fitter_3dmm", "")
         
+        face_obj = call_ml_api(face_gfp_e4e, output_dirpath, "fitter_3dmm", "obj")
+        face_texture = call_ml_api(face_gfp_e4e, output_dirpath, "texture_fitter", "png")
+        #face_gt = call_gt_api(face_gfp_e4e, face_obj)
+
+        
+
 
         deca_zip = call_ml_api(face_gfp_e4e, output_dirpath, "deca3dface", "zip")
         deca_results = unzip_deca_file(deca_zip)
-        _ = call_ml_api(deca_results["texture"], output_dirpath, "texture_correction_deca", "png")
-        _ = call_ml_api(deca_results["texture"], output_dirpath, "correction_color_deca", "json")
+        # _ = call_ml_api(deca_results["texture"], output_dirpath, "texture_correction_deca", "png")
+        # _ = call_ml_api(deca_results["texture"], output_dirpath, "correction_color_deca", "json")
 
         # d3df_zip = call_ml_api(face_gfp_e4e, output_dirpath, "detailed_3d_face", "zip")
         # d3df_results = unzip_d3df_file(d3df_zip)

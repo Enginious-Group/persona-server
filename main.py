@@ -107,12 +107,20 @@ async def obj_forward_process(file: UploadFile = File(...)):
         response_path = current_working_dir + '/response.zip'
        
         with ZipFile(response_path, 'w') as response_zip:
-            if os.path.exists(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png)):
-                response_zip.write(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png), 't_' + person_name + '.png')
+            #if os.path.exists(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png)):
+            #    response_zip.write(os.path.join(current_working_dir, 'texture_correction_deca', person_name_png), 't_' + person_name + '.png')
+            #if os.path.exists(os.path.join(current_working_dir, 'deca3dface', person_name_obj)):
+            #    response_zip.write(os.path.join(current_working_dir, 'deca3dface', person_name_obj), person_name + '.obj')
+            
             if os.path.exists(os.path.join(current_working_dir, 'deca3dface', 'head_normals.png')):
                 response_zip.write(os.path.join(current_working_dir, 'deca3dface', 'head_normals.png'), 'n_' + person_name + '.png')
-            if os.path.exists(os.path.join(current_working_dir, 'deca3dface', person_name_obj)):
-                response_zip.write(os.path.join(current_working_dir, 'deca3dface', person_name_obj), person_name + '.obj')
+
+            if os.path.exists(os.path.join(current_working_dir, 'fitter_3dmm', person_name_obj)):
+                response_zip.write(os.path.join(current_working_dir, 'fitter_3dmm', person_name_obj), person_name + '.obj')
+            if os.path.exists(os.path.join(current_working_dir, 'texture_fitter', person_name_png)):
+                response_zip.write(os.path.join(current_working_dir, 'texture_fitter', person_name_png), 't_' + person_name + '.png')
+            
+
             if os.path.exists(os.path.join(current_working_dir, 'correction_color_deca', person_name_json)):
                 response_zip.write(os.path.join(current_working_dir, 'correction_color_deca', person_name_json), "color_correction.json")
             if os.path.exists(os.path.join(current_working_dir, 'age_estimator', person_name_json)):
