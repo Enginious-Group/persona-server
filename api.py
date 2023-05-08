@@ -73,16 +73,7 @@ def call_gt_api(photo_filepath:Path, obj_filepath:Path, output_dirpath:Path, api
         files = {'photo_file': (photo_filepath, open(photo_filepath, 'rb'), 'image/png'),
          'obj_file': (obj_filepath, open(obj_filepath, 'rb'))}
     ''' 
-    #output_extension = "png"
-    #api_name = "gt_texture_extractor"
-    # Create url to access api
     url = f'http://{EPHEM_URL}:{PORTS[api_name]}/process/{api_name}'
-
-    # Open input file, and process with api 
-    #headers = {'Content-Type': 'multipart/form-data'}
-
-    #files = {'photo_file': (open(photo_filepath, 'rb'), 'image/png'),
-    #        'obj_file': (open(obj_filepath, 'rb'))}
     
     files = {'photo_file': (open(photo_filepath, 'rb')),
              'obj_file': (open(obj_filepath, 'rb'))}
