@@ -16,7 +16,7 @@ The following things are hardcoded in the script:
         - age_estimator
         - texture_correction
 """
-
+import os
 import argparse
 import logging
 import requests
@@ -50,7 +50,7 @@ PORTS = {
     "hair_color":              9083,
     "fitter_3dmm":             9087,
     "texture_fitter":          9088,
-    "gt_texture_extractor":    9098,
+    "gt_texture_extractor":    9089,
 }
 
 def flatten(t:list):
@@ -61,7 +61,7 @@ class ApiError(Exception):
     pass
 
 
-def call_gt_api(photo_filepath:Path, obj_filepath:Path):
+def call_gt_api(photo_filepath:Path, obj_filepath:Path, output_dirpath:Path, api_name:str, output_extension:str):
     #TODO: Fix multiple args request
     '''
     Function making a request call to a given ML API
@@ -73,26 +73,32 @@ def call_gt_api(photo_filepath:Path, obj_filepath:Path):
         files = {'photo_file': (photo_filepath, open(photo_filepath, 'rb'), 'image/png'),
          'obj_file': (obj_filepath, open(obj_filepath, 'rb'))}
     ''' 
-    output_extension = "png"
-    api_name = "gt_texture_extractor"
+    #output_extension = "png"
+    #api_name = "gt_texture_extractor"
     # Create url to access api
     url = f'http://{EPHEM_URL}:{PORTS[api_name]}/process/{api_name}'
 
     # Open input file, and process with api 
+    #headers = {'Content-Type': 'multipart/form-data'}
 
-    files = {'photo_file': (open(photo_filepath, 'rb'), 'image/png'),
-        'obj_file': (open(obj_filepath, 'rb'))}
+    #files = {'photo_file': (open(photo_filepath, 'rb'), 'image/png'),
+    #        'obj_file': (open(obj_filepath, 'rb'))}
+    
+    files = {'photo_file': (open(photo_filepath, 'rb')),
+             'obj_file': (open(obj_filepath, 'rb'))}
+
+
     r = requests.post(url, files=files)
 
     if r.status_code == 200:
         logging.info(f"{api_name} returned results!")
 
         # Create folder for output
-        output_dir = output_dirpath / input_filepath.stem / api_name
+        output_dir = output_dirpath / photo_filepath.stem / api_name
         output_dir.mkdir(parents=True, exist_ok=True)
         
         # Save output to file
-        output_filepath = output_dir / (input_filepath.stem + "." + output_extension)
+        output_filepath = output_dir / (photo_filepath.stem + "." + output_extension)
         with open(output_filepath, 'wb') as output:
             output.write(r.content)
 
@@ -101,7 +107,7 @@ def call_gt_api(photo_filepath:Path, obj_filepath:Path):
 
     else:
         raise ApiError(f"{api_name} failed! Status code: {r.status_code}")
-
+    
 def call_ml_api(input_filepath:Path, output_dirpath:Path, api_name:str, output_extension:str):
     '''
     Function making a request call to a given ML API
@@ -196,7 +202,7 @@ def process_file(input_filepath:Path, output_dirpath:Path):
         
         face_obj = call_ml_api(face_gfp_e4e, output_dirpath, "fitter_3dmm", "obj")
         face_texture = call_ml_api(face_gfp_e4e, output_dirpath, "texture_fitter", "png")
-        #face_gt = call_gt_api(face_gfp_e4e, face_obj)
+        face_gt = call_gt_api(face_gfp_e4e, face_obj, output_dirpath, "gt_texture_extractor", "png")
 
         
 
