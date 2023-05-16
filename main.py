@@ -121,6 +121,10 @@ async def obj_forward_process(file: UploadFile = File(...)):
                 response_zip.write(os.path.join(current_working_dir, 'texture_fitter', person_name_png), 't_' + person_name + '.png')
             if os.path.exists(os.path.join(current_working_dir, 'gt_texture_extractor', person_name_png)):
                 response_zip.write(os.path.join(current_working_dir, 'gt_texture_extractor', person_name_png), 'gt_' + person_name + '.png')
+            if os.path.exists(os.path.join(current_working_dir, 'deca3dface', person_name_obj)):
+                response_zip.write(os.path.join(current_working_dir, 'deca3dface', person_name_obj), 'old_' + person_name + '.obj')
+
+
             
 
             if os.path.exists(os.path.join(current_working_dir, 'correction_color_deca', person_name_json)):
