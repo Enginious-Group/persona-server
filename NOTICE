@@ -1,0 +1,17 @@
+ENGINOUS VH Platform – results of research project POIR.01.01.01-00-0956/19
+Copyright 2020-2026 Enginious Group S.A. (formerly ENGINOUS sp. z o.o. sp.k.), Łódź, Poland
+
+The original work of Enginious Group S.A. in this repository is licensed under
+the Apache License, Version 2.0 (see LICENSE).
+
+Third-party material that may be included in this repository is NOT covered by
+the Apache License and remains subject to its owners' licences, including:
+ - Unreal Engine, MetaHuman assets and other Epic Games content and plugins
+   (Unreal Engine EULA / MetaHuman licence terms);
+ - outputs of third-party machine-learning models (e.g. DECA) under their own
+   licences;
+ - bundled third-party Python packages under their own licences.
+
+Projekt współfinansowany ze środków Unii Europejskiej w ramach Europejskiego
+Funduszu Rozwoju Regionalnego, Program Operacyjny Inteligentny Rozwój 2014-2020,
+Poddziałanie 1.1.1, realizowany przez Narodowe Centrum Badań i Rozwoju.
